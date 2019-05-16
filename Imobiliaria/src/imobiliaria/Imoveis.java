@@ -2,9 +2,11 @@
 
 package imobiliaria;
 
+import java.io.Serializable;
 
 
-public class Imoveis {
+
+public class Imoveis implements Serializable {
     
     private int codigo;
     private String nome;

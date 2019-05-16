@@ -4,17 +4,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Imobiliaria {
 
-    public static ArrayList<Imoveis> imoveis = new ArrayList();
-    public static Scanner scan = new Scanner(System.in);
+    static ArrayList<Imoveis> imoveis = new ArrayList();
+    static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
         exibirMenu();
-        
     }
 
     public static void exibirMenu() {
@@ -29,10 +30,10 @@ public class Imobiliaria {
             int opcao = Integer.parseInt(scan.nextLine());
             switch (opcao) {
                 case 1:
-                    cadastrar();
+                    cadastrarImoveis();
                     break;
                 case 2:
-                    listar();
+                    listarImoveis();
                     break;
                 case 3:
                     excluir();
@@ -44,12 +45,12 @@ public class Imobiliaria {
                     atualizar();
                     break;
                 case 6:
-                    System.out.println("\nEncerrando\n");
+                    System.out.println("Encerrando");
                     System.exit(0);
                     break;
 
                 default:
-                    System.out.println("\nOpção inválida. Afff.\n");
+                    System.out.println("Opção inválida.");
                     break;
             }
 
@@ -57,19 +58,22 @@ public class Imobiliaria {
 
     }
 
-    public static void cadastrar() {
+    public static void cadastrarImoveis() {
+
         ArrayList<Imoveis> imoveis = new ArrayList();
+        /*
+        try {
             System.out.println("Cadastrar Imóvel: ");
             System.out.println("Código: ");
             int codigo = Integer.parseInt(scan.nextLine());
             System.out.print("Nome do Imóvel: ");
             String nome = (scan.nextLine());
             System.out.print("Valor do Aluguel: ");
-            double aluguel = Double.parseDouble(scan.nextLine());            
-            for (int i = 0; i < imoveis.size(); i++) {
-                Imoveis imovel = new Imoveis(codigo, nome, aluguel);
-                imoveis.add(imovel);
-                try {
+            double aluguel = Double.parseDouble(scan.nextLine());
+
+            Imoveis imovel = new Imoveis(codigo, nome, aluguel);
+            imoveis.add(imovel);
+
             FileOutputStream fos = new FileOutputStream("imoveis.txt");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(imoveis);
@@ -78,66 +82,36 @@ public class Imobiliaria {
         } catch (Exception exc) {
             System.out.println(exc.getMessage());
         }
-        }
+*/
     }
 
-    public static String converte(boolean boo) {
-        String str = "";
-        if (boo == true) {
-            str = "Sim";
-        } else {
-            str = "Não";
-        }
-        return str;
-    }
-
-    public static void listar() {
-        ArrayList<Imoveis> imoveis = new ArrayList();
-        try{
-            FileInputStream fis = new FileInputStream("imoveis.txt");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            imoveis = (ArrayList) ois.readObject();
-            ois.close();
+    public static void listarImoveis() {
+        
+        try { 
+                FileInputStream fis = new FileInputStream("imoveis.txt");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Imoveis imoveis = (Imoveis) ois.readObject();
+                System.out.println("Código: " + imoveis.getCodigo() + 
+                        " Nome: " + imoveis.getNome() + 
+                        " Valor: " + imoveis.getAluguel());
+                ois.close();
         } catch (Exception exc) {
             System.out.println(exc.getMessage());
         }
-        
-        for(int i = 0; i < imoveis.size(); i++){
-            System.out.println("Código: " + imoveis.get(i).getCodigo() + "Nome: " + imoveis.get(i).getNome() + "Valor: " + imoveis.get(i).getAluguel() + "Locado? " + imoveis.get(i).isLocado());
-        }
-        /* 
-        if (imoveis.size() != 0) {
-
-            System.out.println("Código: " + imoveis.get(0) + " Nome " + imoveis.get(0).getNome() + " Valor do Aluguel: " + imoveis.get(0).getAluguel() + " Situação: " + imoveis.get(0).isLocado());
-        } else {
-            System.out.println("");
-            System.out.println("Não há imóveis cadastrados.");
-            System.out.println("");
-        }
-         */
 
     }
 
     public static void excluir() {
         System.out.println("Excluir Imóvel: ");
         for (int i = 0; i < imoveis.size(); i++) {
-            System.out.println("Nome: " + imoveis.get(i).getNome());
-        }
-        System.out.print("Informe o nome a ser excluído: ");
-        String nome = (scan.nextLine());
-
-        boolean encontrado = false;
-        for (int i = 0; i < imoveis.size(); i++) {
-            if (imoveis.get(i).getNome().equals(nome)) {
+            System.out.print("Informe o nome a ser excluído: ");
+            String nome = (scan.nextLine());
+            if (nome == imoveis.get(i).getNome()) {
                 imoveis.remove(i);
-                encontrado = true;
-                break;
+                System.out.println("Imóvel Excluído com Sucesso!");
+            } else {
+                System.out.println("Nome não Cadastrado.");
             }
-        }
-        if (encontrado) {
-            System.out.println("\nImóvel excluído com sucesso.\n");
-        } else {
-            System.out.println("\nImóvel não foi encontrado.\n");
         }
     }
 
